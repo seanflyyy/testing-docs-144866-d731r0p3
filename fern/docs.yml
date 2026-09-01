@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://schema.buildwithfern.dev/docs-yml.json
 
 instances:
-  - url: https://testing-docs-144866-d731r0p3.docs.buildwithfern.com
+  - url: https://testing-docs-144866.docs.buildwithfern.com
 
 title: Vapi
 favicon: static/images/favicon.ico
