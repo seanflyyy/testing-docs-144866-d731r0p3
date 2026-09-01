@@ -1,0 +1,39 @@
+name: Release TypeScript SDK
+
+on:
+  workflow_call:
+    inputs:
+      makePR:
+        description: "Compatibility input; SDK releases always open pull requests for manual approval"
+        default: true
+        type: boolean          
+      version:
+        description: "The version of the TypeScript SDK that you would like to release"
+        required: true
+        type: string    
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version of the TypeScript SDK that you would like to release"
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+
+      - name: Download Fern
+        run: npm install -g fern-api
+
+      - name: Release TypeScript SDK
+        env:
+          FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          fern generate --api api --group ts-sdk --version ${{ inputs.version }} --mode pull-request --log-level debug

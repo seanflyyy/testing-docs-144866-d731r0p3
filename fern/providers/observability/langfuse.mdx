@@ -1,0 +1,114 @@
+---
+title: Langfuse Integration with Vapi
+description: Integrate Vapi with Langfuse for enhanced voice AI telemetry monitoring, enabling improved performance and reliability of your AI applications.
+slug: providers/observability/langfuse
+---
+
+# Langfuse Integration
+
+Vapi natively integrates with Langfuse, allowing you to send traces directly to Langfuse for enhanced telemetry monitoring. This integration enables you to gain deeper insights into your voice AI applications and improve their performance and reliability.
+
+<Frame>
+  <div class="video-embed-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/V4ybHNWvu90?si=QDCINdagfM47Exn4"
+      title='An embedded YouTube video titled "Langfuse Integration with Vapi"'
+      frameborder="0"
+      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    />
+  </div>
+</Frame>
+
+## What is Langfuse?
+
+[Langfuse](https://langfuse.com/) is an open source LLM engineering platform designed to provide better **[observability](https://langfuse.com/docs/observability/overview)** and **[evaluations](https://langfuse.com/docs/evaluation/scores/overview)** into AI applications. It helps developers track, analyze, and visualize traces from AI interactions, enabling better performance tuning, debugging, and optimization of AI agents.
+
+## Get Started
+
+<Steps>
+<Step title="Get your Langfuse Credentials">
+
+First, you'll need your Langfuse credentials:
+
+- **Secret Key**
+- **Public Key**
+- **Host URL**
+
+You can obtain these by signing up for [Langfuse Cloud](https://cloud.langfuse.com/) or [self-hosting Langfuse](https://langfuse.com/docs/deployment/self-host).
+
+</Step>
+
+<Step title="Add Langfuse Credentials">
+
+Log in to your Vapi dashboard and navigate to the [Integrations page](https://dashboard.vapi.ai/settings/integrations).
+
+Under the **Observability Providers** section, you'll find an option for **Langfuse**. Enter your Langfuse credentials:
+
+- **Secret Key**
+- **Public Key**
+- **Host URL** (US data region: `https://us.cloud.langfuse.com`, EU data region: `https://cloud.langfuse.com`)
+
+Click **Save** to update your credentials.
+
+<Frame caption="Vapi Provider Credentials.">
+  <img src="https://langfuse.com/images/docs/vapi-integration-credentials.png" />
+</Frame>
+
+</Step>
+
+<Step title="See Traces in Langfuse">
+
+Once you've added your credentials, you should start seeing traces in your Langfuse dashboard for every conversation your agents have.
+
+<Frame caption="Example trace of Vapi conversation in Langfuse.">
+  <img src="https://langfuse.com/images/docs/vapi-integration-example-trace.png" />
+</Frame>
+
+Example trace in Langfuse: https://cloud.langfuse.com/project/cloramnkj0002jz088vzn1ja4/traces/50163c14-9784-4cb9-b18e-23e924d0bb66
+
+</Step>
+
+<Step title="Evaluate and Debug your Agent">
+
+To make the most out of this integration, you can now use Langfuse's [evaluation](https://langfuse.com/docs/scores/overview) and [debugging](https://langfuse.com/docs/analytics/overview) tools to analyze and improve the performance of your voice AI agents. 
+
+</Step>
+</Steps>
+
+## Enrich Traces
+Vapi allows you to enrich Langfuse traces by integrating [Metadata](https://langfuse.com/docs/tracing-features/metadata) and [Tags](https://langfuse.com/docs/tracing-features/tags).
+
+By default, we will add the following values to the metadata of each trace:
+
+- `call.metadata`
+- `assistant.metadata`
+- `assistantOverrides.metadata`
+- `assistantOverrides.variableValues`
+
+### Usage
+You can enhance your observability in Langfuse by adding metadata and tags:
+
+**Metadata**
+
+Use the [`assistant.observabilityPlan.metadata`](/api-reference/assistants/create#request.body.observabilityPlan.metadata) field to attach custom key-value pairs.
+
+Examples:
+- Track experiment versions ("experiment": "v2.1")
+- Store user segments ("user_type": "beta_tester")
+- Log environment details ("env": "production")
+
+**Tags**
+
+Use the [`assistant.observabilityPlan.tags`](/api-reference/assistants/create#request.body.observabilityPlan.tags) field to add searchable labels.
+
+Examples:
+- Mark important runs ("priority")
+- Group related sessions ("onboarding", "A/B_test")
+- Filter by feature ("voice_assistant")
+
+Adding metadata and tags makes it easier to filter, analyze, and monitor your assistants activity in Langfuse.
+
+### Example
+![Langfuse Metadata Example](../../static/images/providers/langfuse-example.png)

@@ -1,0 +1,64 @@
+---
+title: Rime AI
+subtitle: Use Rime AI text-to-speech voices with your Vapi voice agent.
+description: Configure a Rime AI model and voice for a Vapi assistant and find its voice ID in the Vapi Voice Library.
+slug: providers/voice/rimeai
+---
+
+Rime AI provides streaming text-to-speech models and voices that you can use as a Vapi assistant's voice.
+
+You can use Rime AI through Vapi's default integration, or use your own Rime AI account by connecting it in [Integrations](/providers/integrations).
+
+## Text-to-speech
+
+Set `voice.provider` to `rime-ai`, `voice.model` to a Rime model, and `voice.voiceId` to a voice. Rime AI offers many voices and supports voice cloning; browse and copy a voice's ID from the [Voice Library](/providers/voice/overview).
+
+```bash
+curl -X PATCH "https://api.vapi.ai/assistant/ASSISTANT_ID" \
+  -H "Authorization: Bearer $VAPI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "voice": {
+      "provider": "rime-ai",
+      "model": "arcana",
+      "voiceId": "luna",
+      "language": "en"
+    }
+  }'
+```
+
+For additional API configuration options, review the [`RimeAIVoice` fields](/api-reference/assistants/create#request.body.voice.RimeAIVoice) in the Create Assistant API reference.
+
+### Supported models
+
+| Model | Model ID |
+| --- | --- |
+| Arcana | `arcana` |
+| Mist v2 | `mistv2` |
+| Mist | `mist` |
+
+### Supported languages
+
+Language support depends on the selected model. The following model and language combinations are currently supported by Vapi.
+
+| Language | Language code | Arcana | Mist v2 | Mist |
+| --- | --- | --- | --- | --- |
+| Arabic | `ar` | X |  |  |
+| English | `en` | X | X | X |
+| French | `fr` | X | X | X |
+| German | `de` | X | X | X |
+| Hebrew | `he` | X |  |  |
+| Hindi | `hi` | X |  |  |
+| Japanese | `ja` | X |  |  |
+| Portuguese | `pt` | X |  |  |
+| Sinhala | `si` | X |  |  |
+| Spanish | `es` | X | X | X |
+| Tamil | `ta` | X |  |  |
+
+## Related
+
+<CardGroup cols={1}>
+  <Card title="Voices" icon="volume-high" href="/providers/voice/overview">
+    Compare every text-to-speech provider Vapi supports.
+  </Card>
+</CardGroup>

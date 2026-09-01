@@ -1,0 +1,349 @@
+---
+title: PCI Compliance
+subtitle: Ensure secure payment data handling while using Vapi’s voice assistant platform.
+slug: security-and-privacy/pci
+---
+
+
+## Introduction to Security at Vapi
+
+At Vapi, we prioritize the security of your data without compromising the quality of our voice assistant services. Protecting sensitive information, especially financial data, is at the core of our mission.
+
+Our robust security policies and practices ensure you have complete control over your data while accessing all the capabilities of our platform.
+
+## Understanding PCI Compliance
+
+The Payment Card Industry Data Security Standard (PCI DSS) is a global framework designed to protect credit card information. Any organization processing, storing, or transmitting cardholder data must comply with PCI DSS to ensure that sensitive financial data is securely handled.
+Key requirements for PCI compliance include:
+
+- Securing data collection, transmission, and storage.
+- Implementing strong access control measures.
+- Regularly monitoring and testing systems to prevent breaches.
+
+## PCI Compliance on Vapi’s Platform
+
+By default, Vapi enables call recording, logging, and transcription features to enhance service quality. However, handling sensitive payment card data requires additional precautions.
+
+### How We Ensure Security
+
+When PCI compliance is enabled:
+
+- **Cloud Storage and Webhooks**: You can choose to store recordings in a PCI DSS Level 1 compliant cloud storage solution (AWS S3, Azure Blob Storage, Google Cloud Storage or Cloudflare R2) and receive transcripts through your webhook.
+
+- **No Retention Without Configuration**: If no cloud storage or webhook is specified, recordings and transcripts are permanently deleted to avoid retaining sensitive data.
+
+
+## How to Enable PCI Compliance
+If your organization handles payment data, you can enable PCI compliance by updating your assistant’s configuration.
+
+#### Configuration Steps:
+1. Log in to your Vapi account and navigate to your assistant’s settings.
+2. Enable the PCI Compliance toggle.
+3. Select the PCI-compliant Model, Voice, and Transcriber options for your assistant.
+4. [Optional] Configure cloud storage credentials for storing call recordings. If you have any of the storage endpoint credentials, they will be used to push the recordings.
+5. [Optional] Set up **webhooks** for receiving transcriptions.
+
+
+<Warning>
+If either cloud storage or webhook is not configured, the respective data will not be stored and cannot be retrieved.
+</Warning>
+
+Example configuration for `PCI compliant` assistant is:
+```JSON
+{
+  "compliancePlan": {
+    "pciEnabled": true
+  }
+}
+```
+Note: The default value for `compliancePlan.pciEnabled` is false. Activating this setting aligns your assistant with PCI DSS standards by ensuring data is securely transmitted without being stored on Vapi’s systems.
+
+## Selective Recording with Squads
+
+For businesses that need to collect payment information while maintaining compliance, you can use **squads** to selectively disable recording, logging, and transcription only during sensitive payment collection phases. This approach allows you to:
+
+- **Record the beginning and end** of calls for quality assurance
+- **Disable all artifacts** during payment data collection
+- **Stay compliant** while gathering credit card information
+- **Use handoff tools** to seamlessly transfer between assistants
+- **Leverage Vapi's logging and trace recording** for non-sensitive portions while staying compliant
+
+### Payment Collection Squad Example
+
+Here's a complete squad configuration that demonstrates this approach:
+
+```json
+{
+    "name": "Payment Squad Without Recording",
+    "members": [
+        {
+            "assistant": {
+                "name": "Assistant 1",
+                "model": {
+                    "model": "gpt-4o",
+                    "provider": "openai",
+                    "messages": [
+                        {
+                            "content": "You are a helpful QuickSend assistant. Greet the caller, let them know you'll help them add a new payment method, and then smoothly transfer them to the payment setup assistant.",
+                            "role": "system"
+                        }
+                    ]
+                },
+                "voice": {
+                    "provider": "vapi",
+                    "version": 2,
+                    "voiceId": "Elliot"
+                },
+                "transcriber": {
+                    "model": "nova-2",
+                    "provider": "deepgram",
+                    "language": "en"
+                },
+                "keypadInputPlan": {
+                    "enabled": true,
+                    "timeoutSeconds": 10,
+                    "delimiters": [
+                        "#"
+                    ]
+                },
+                "firstMessage": "Welcome to QuickSend! I'll help you add a new payment method. Let's get started.",
+                "firstMessageMode": "assistant-speaks-first"
+            },
+            "assistantDestinations": [
+                {
+                    "type": "assistant",
+                    "assistantName": "Assistant 2",
+                    "description": "Transfer the caller to the payment setup assistant."
+                }
+            ]
+        },
+        {
+            "assistant": {
+                "name": "Assistant 2",
+                "model": {
+                    "model": "gpt-4o",
+                    "provider": "openai",
+                    "messages": [
+                        {
+                            "content": "You are a payment setup assistant. Ask the caller to enter their new card number followed by the pound (#) key. When you receive it, repeat it back clearly for confirmation. Once confirmed, transfer them to the payment confirmation assistant.",
+                            "role": "system"
+                        }
+                    ]
+                },
+                "artifactPlan": {
+                    "recordingEnabled": false,
+                    "loggingEnabled": false,
+                    "transcriptPlan": {
+                        "enabled": false
+                    }
+                },
+                "voice": {
+                    "provider": "vapi",
+                    "version": 2,
+                    "voiceId": "Elliot"
+                },
+                "transcriber": {
+                    "model": "nova-2",
+                    "provider": "deepgram",
+                    "language": "en"
+                },
+                "firstMessage": "Please enter your new card number followed by the POUND key.",
+                "firstMessageMode": "assistant-speaks-first",
+                "keypadInputPlan": {
+                    "enabled": true,
+                    "timeoutSeconds": 10,
+                    "delimiters": [
+                        "#"
+                    ]
+                }
+            },
+            "assistantDestinations": [
+                {
+                    "type": "assistant",
+                    "assistantName": "Assistant 3",
+                    "description": "Transfer the caller to the payment confirmation assistant.",
+                    "contextEngineeringPlan": {
+                        "type": "previousAssistantMessages"
+                    },
+                    "variableExtractionPlan": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "lastFourDigits": {
+                                    "type": "string",
+                                    "description": "last four digits of the card the user gave as input"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "assistant": {
+                "name": "Assistant 3",
+                "model": {
+                    "model": "gpt-4o",
+                    "provider": "openai",
+                    "messages": [
+                        {
+                            "content": "You are a payment confirmation assistant. Thank the caller for providing their card number. Read out the last four digits to them and confirm that they are correct. Once confirmed, let the caller know the payment method has been added successfully and close the conversation politely. Last four digits are {{lastFourDigits}}",
+                            "role": "system"
+                        }
+                    ]
+                },
+                "voice": {
+                    "provider": "vapi",
+                    "version": 2,
+                    "voiceId": "Elliot"
+                },
+                "transcriber": {
+                    "model": "nova-2",
+                    "provider": "deepgram",
+                    "language": "en"
+                },
+                "firstMessage": "Thanks for providing your card number. Do you want to proceed with your payment?",
+                "firstMessageMode": "assistant-speaks-first"
+            }
+        }
+    ]
+}
+```
+
+### How This Squad Works
+
+1. **Assistant 1** (Greeting): Records and logs the initial conversation
+2. **Assistant 2** (Payment Collection): **Disables all artifacts** using `artifactPlan` while collecting credit card data via keypad input
+3. **Assistant 3** (Confirmation): Records and logs the final confirmation
+
+The key component is the `artifactPlan` in Assistant 2:
+
+```json
+"artifactPlan": {
+    "recordingEnabled": false,
+    "loggingEnabled": false,
+    "transcriptPlan": {
+        "enabled": false
+    }
+}
+```
+
+This ensures that sensitive payment information is never recorded, logged, or transcribed, while still allowing you to maintain call quality data for the non-sensitive portions of the conversation.
+
+## Handoff Context Configuration
+
+When using squads or the handoff tool, you can control what conversation context is forwarded to the next assistant using `contextEngineeringPlan`. This is particularly important for PCI-compliant flows where an assistant handles sensitive data such as payment card numbers.
+
+By default, handoffs use `contextEngineeringPlan` type `all`, which transfers the entire conversation history -- including tool call results. For assistants that process sensitive data, you should choose a more restrictive context type to ensure that tool call results (which may contain card numbers or other sensitive values) are not forwarded.
+
+<Warning>
+If a sensitive assistant uses the default `contextEngineeringPlan` (type `all`), the full conversation context -- including tool call results -- will be forwarded to the next assistant. Always set an appropriate context engineering plan on handoff destinations from assistants that handle sensitive data.
+</Warning>
+
+### Recommended context types
+
+The following table describes the `contextEngineeringPlan` types relevant to PCI and other sensitive data flows:
+
+| Type | Behavior | PCI Recommendation |
+|------|----------|-------------|
+| `previousAssistantMessages` | Forwards only the conversation history from **before** the current assistant's session. Excludes the current assistant's own messages and tool calls entirely. | **Recommended.** Preserves useful pre-payment context while fully excluding the sensitive assistant's data. |
+| `none` | Starts the next assistant with a blank conversation. No prior context is forwarded. | **Safe.** Maximum isolation. Use when the next assistant does not need any prior context. |
+
+<Note>
+For a full reference on all context engineering plan types, see the [Handoff Tool - Context Engineering](/squads/handoff#context-engineering) documentation.
+</Note>
+
+### Configuring the context engineering plan
+
+Set the `contextEngineeringPlan` on the handoff destination from your sensitive assistant. Here is an example using `previousAssistantMessages`:
+
+```json
+"assistantDestinations": [
+    {
+        "type": "assistant",
+        "assistantName": "Confirmation Assistant",
+        "description": "Transfer to the confirmation assistant after payment collection.",
+        "contextEngineeringPlan": {
+            "type": "previousAssistantMessages"
+        }
+    }
+]
+```
+
+Or equivalently, when using the handoff tool:
+
+```json
+{
+    "type": "handoff",
+    "destinations": [
+        {
+            "type": "assistant",
+            "assistantName": "Confirmation Assistant",
+            "description": "Transfer to the confirmation assistant after payment collection.",
+            "contextEngineeringPlan": {
+                "type": "previousAssistantMessages"
+            }
+        }
+    ]
+}
+```
+
+### Using variable extraction for safe data passing
+
+If the next assistant needs specific data from the sensitive session (such as the last four digits of a card number for confirmation), use `variableExtractionPlan` instead of relying on full context forwarding. This extracts only the structured fields you define:
+
+```json
+"assistantDestinations": [
+    {
+        "type": "assistant",
+        "assistantName": "Confirmation Assistant",
+        "contextEngineeringPlan": {
+            "type": "previousAssistantMessages"
+        },
+        "variableExtractionPlan": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "lastFourDigits": {
+                        "type": "string",
+                        "description": "Last four digits of the card number"
+                    }
+                }
+            }
+        }
+    }
+]
+```
+
+The extracted variables are available in the next assistant's system prompt using Liquid template syntax (e.g., `{{lastFourDigits}}`). This is the pattern used in the [Payment Collection Squad Example](#payment-collection-squad-example) above.
+
+<Tip>
+Combining `contextEngineeringPlan` with `variableExtractionPlan` gives you the best of both worlds: sensitive tool call data is excluded from the forwarded context, while the specific data points the next assistant needs are passed through as named variables.
+</Tip>
+
+## Can PCI be used alongside HIPAA?
+Yes, you can enable both HIPAA and PCI compliance for an assistant. In this case, the restrictions from both compliances will apply, meaning that no recordings or transcripts will be stored or transmitted, even if you have specified cloud storage endpoints or webhooks for storing transcripts.
+
+## FAQs
+
+**Q: Will enabling PCI compliance affect the quality of Vapi’s service?**
+
+A: Enabling PCI compliance does not degrade the quality of the voice assistant services.
+However, it restricts you to use only the PCI-compliant endpoints, while limiting access to certain features, such as reviewing call logs, recordings or transcriptions, within the Vapi platform.
+If any cloud storage endpoints are provided, you can review the audio recordings in your own storage environment. The recordings follow the naming convention:
+
+```
+<call_UUID>-<timestamp>-<generated_UUID>-<audio_type>.wav
+```
+
+**Q: Who should use the PCI compliance feature?**
+
+A: This feature is particularly useful for businesses and organizations that handle sensitive payment information and must comply with PCI regulations.
+
+**Q: Can I switch between default and PCI-compliant settings?**
+
+A: Yes, users can toggle the `pciEnabled` setting as needed. However, we recommend carefully considering the implications of each option on your data security and compliance requirements.
+
+## Need Further Assistance?
+
+If you have more questions about security, privacy, PCI compliance, or how to configure your Vapi assistant, our support team is here to help. Contact us at security@vapi.ai for personalized assistance and more information on how to make the most of Vapi’s voice assistant platform while ensuring your data remains protected.

@@ -1,21 +1,46 @@
-<br/>
-<div align="center">
-  <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=fern&utm_content=logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/fern/docs/assets/fern-logo-white.svg">
-      <source media="(prefers-color-scheme: light)" srcset="/fern/docs/assets/fern-logo-primary.svg">
-      <img alt="logo" src="/fern/docs/assets/fern-logo-primary.svg" height="50" align="center">
-    </picture>
-  </a>
-  
-  <br/>
-  
-# Docs starter template for FTUX
+# Vapi Platform Documentation
 
-This is the internal starter template cloned when a user creates a new docs site through the FTUX dashboard flow. It ships with a sample Plant Store API so new users have working documentation out of the box.
+This repository contains the source files for the documentation found at [docs.vapi.ai](https://docs.vapi.ai/). 
 
-The docs starter template for CLI users is still at [fern-api/docs-starter](https://github.com/fern-api/docs-starter).
+Get started with Vapi here: [docs.vapi.ai/introduction](https://docs.vapi.ai/introduction)
 
-## Making changes to this template
+View the API Reference here: [docs.vapi.ai/api-reference](https://docs.vapi.ai/api-reference/)
 
-Any changes here affect what every new user gets when they create a docs site from the dashboard. Test locally with `fern docs dev` and `fern check` before merging.
+Explore our Client and Server SDKs here: [docs.vapi.ai/sdks](https://docs.vapi.ai/sdks)
+
+| Vapi Developer Ecosystem  |  |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Real-time SDKs** | [Web](https://github.com/VapiAI/web) · [Flutter](https://github.com/VapiAI/flutter) · [React Native](https://github.com/VapiAI/react-native-sdk) · [iOS](https://github.com/VapiAI/ios) · [Python](https://github.com/VapiAI/python) · [Vanilla](https://github.com/VapiAI/html-script-tag) |
+| **Client Examples** | [Next.js](https://github.com/VapiAI/client-side-example-javascript-next) · [React](https://github.com/VapiAI/client-side-example-javascript-react) · [Flutter](https://github.com/VapiAI/flutter/tree/main/example) · [React Native](https://github.com/VapiAI/client-side-example-react-native) |
+| **Server Examples** | [Vercel](https://github.com/VapiAI/server-side-example-serverless-vercel) · [Cloudflare](https://github.com/VapiAI/server-side-example-serverless-cloudflare) · [Supabase](https://github.com/VapiAI/server-side-example-serverless-supabase) · [Node](https://github.com/VapiAI/server-side-example-javascript-node) · [Bun](https://github.com/VapiAI/server-side-example-javascript-bun) · [Deno](https://github.com/VapiAI/server-side-example-javascript-deno) · [Flask](https://github.com/VapiAI/server-side-example-python-flask) · [Laravel](https://github.com/VapiAI/server-side-example-php-laravel) · [Go](https://github.com/VapiAI/server-side-example-go-gin) · [Rust](https://github.com/VapiAI/server-side-example-rust-actix) |
+| **Resources** | [Official Docs](https://docs.vapi.ai/) · [API Reference](https://api.vapi.ai/api) |
+| **Community** | [Videos](/community/videos) · [UI Library](https://www.vapiblocks.com/) |
+
+## How can I contribute to these docs?
+
+You can suggest edits by making a pull request.
+
+## How to update documentation?
+
+### Local Development server
+
+To run a local development server with hot-reloading you can run the following command
+
+```sh
+npm install -g fern-api
+fern docs dev
+```
+
+#### Hosted URL
+
+To update your documentation on a hosted URL, run
+```
+# npm install -g fern-api
+fern generate --docs
+```
+To preview your documentation, run
+```
+# npm install -g fern-api
+fern generate --docs --preview
+```
+The repository contains GitHub workflows that will automatically run these commands for you. For example, when you make a PR a preview link will be auto-generated and when you merge to main the docs site will update.

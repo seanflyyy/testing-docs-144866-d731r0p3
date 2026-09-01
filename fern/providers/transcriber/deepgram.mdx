@@ -1,0 +1,148 @@
+---
+title: Deepgram
+subtitle: Use Deepgram speech-to-text models in Vapi.
+description: Configure Deepgram as your Vapi assistant's transcriber, including supported models and languages.
+slug: providers/transcriber/deepgram
+---
+
+Deepgram provides speech-to-text for Vapi voice agents.
+
+You can use Deepgram through Vapi's default integration, or connect your own account in [Integrations](/providers/integrations).
+
+## Supported capability
+
+| Capability | Provider value |
+| --- | --- |
+| Speech-to-text | `deepgram` |
+
+## Speech-to-text
+
+Set `transcriber.provider` to `deepgram` and `transcriber.model` to a Deepgram model.
+
+```bash
+curl -X PATCH "https://api.vapi.ai/assistant/ASSISTANT_ID" \
+  -H "Authorization: Bearer $VAPI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transcriber": { "provider": "deepgram", "model": "nova-3" }
+  }'
+```
+
+For additional API configuration options, review the [`DeepgramTranscriber` fields](/api-reference/assistants/create#request.body.transcriber.DeepgramTranscriber) in the Create Assistant API reference.
+
+| Model | Model ID |
+| --- | --- |
+| Nova 3 | `nova-3` |
+| Nova 3 General | `nova-3-general` |
+| Nova 3 Medical | `nova-3-medical` |
+| Nova 2 | `nova-2` |
+| Nova 2 General | `nova-2-general` |
+| Nova 2 Meeting | `nova-2-meeting` |
+| Nova 2 Phone Call | `nova-2-phonecall` |
+| Nova 2 Finance | `nova-2-finance` |
+| Nova 2 Conversational AI | `nova-2-conversationalai` |
+| Nova 2 Voicemail | `nova-2-voicemail` |
+| Nova 2 Video | `nova-2-video` |
+| Nova 2 Medical | `nova-2-medical` |
+| Nova 2 Drive-Thru | `nova-2-drivethru` |
+| Nova 2 Automotive | `nova-2-automotive` |
+| Flux General English | `flux-general-en` |
+| Flux General Multilingual | `flux-general-multi` |
+
+### Supported languages
+
+The matrix shows the language and model combinations currently supported by Vapi.
+
+<Note>
+The Nova 3 column applies to Nova 3 and Nova 3 General, and the Nova 2 column applies to Nova 2 and Nova 2 General. Specialized Nova 2 includes Meeting, Phone Call, Finance, Conversational AI, Voicemail, Video, Medical, Drive-Thru, and Automotive.
+</Note>
+
+| Language | Language code | Nova 3 | Nova 3 Medical | Nova 2 | Specialized Nova 2 | Flux General English | Flux General Multilingual |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Arabic | `ar` | X |  |  |  |  |  |
+| Bangla | `bn` | X |  |  |  |  |  |
+| Belarusian | `be` | X |  |  |  |  |  |
+| Bosnian | `bs` | X |  |  |  |  |  |
+| Bulgarian | `bg` | X |  | X |  |  |  |
+| Catalan | `ca` | X |  | X |  |  |  |
+| Chinese | `zh` | X |  | X |  |  |  |
+| Chinese (China) | `zh-CN` | X |  | X |  |  |  |
+| Chinese (Hong Kong) | `zh-HK` | X |  | X |  |  |  |
+| Chinese (Simplified) | `zh-Hans` | X |  | X |  |  |  |
+| Chinese (Taiwan) | `zh-TW` | X |  | X |  |  |  |
+| Chinese (Traditional) | `zh-Hant` | X |  | X |  |  |  |
+| Croatian | `hr` | X |  |  |  |  |  |
+| Czech | `cs` | X |  | X |  |  |  |
+| Danish | `da` | X |  | X |  |  |  |
+| Danish (Denmark) | `da-DK` | X |  | X |  |  |  |
+| Dutch | `nl` | X |  | X |  |  | X |
+| Dutch (Belgium) | `nl-BE` | X |  | X |  |  |  |
+| English | `en` | X | X | X | X | X | X |
+| English (Australia) | `en-AU` | X | X | X |  |  |  |
+| English (Canada) | `en-CA` |  | X |  |  |  |  |
+| English (India) | `en-IN` | X | X | X |  |  |  |
+| English (Ireland) | `en-IE` |  | X |  |  |  |  |
+| English (New Zealand) | `en-NZ` | X | X | X |  |  |  |
+| English (United Kingdom) | `en-GB` | X | X | X |  |  |  |
+| English (United States) | `en-US` | X | X | X | X |  |  |
+| Estonian | `et` | X |  | X |  |  |  |
+| Filipino | `tl` | X |  |  |  |  |  |
+| Finnish | `fi` | X |  | X |  |  |  |
+| French | `fr` | X |  | X |  |  | X |
+| French (Canada) | `fr-CA` | X |  | X |  |  |  |
+| German | `de` | X |  | X |  |  | X |
+| German (Switzerland) | `de-CH` | X |  | X |  |  |  |
+| Greek | `el` | X |  | X |  |  |  |
+| Hebrew | `he` | X |  |  |  |  |  |
+| Hindi | `hi` | X |  | X |  |  | X |
+| Hungarian | `hu` | X |  | X |  |  |  |
+| Indonesian | `id` | X |  | X |  |  |  |
+| Italian | `it` | X |  | X |  |  | X |
+| Japanese | `ja` | X |  | X |  |  | X |
+| Kannada | `kn` | X |  |  |  |  |  |
+| Korean | `ko` | X |  | X |  |  |  |
+| Korean (South Korea) | `ko-KR` | X |  | X |  |  |  |
+| Latvian | `lv` | X |  | X |  |  |  |
+| Lithuanian | `lt` | X |  | X |  |  |  |
+| Macedonian | `mk` | X |  |  |  |  |  |
+| Malay | `ms` | X |  | X |  |  |  |
+| Marathi | `mr` | X |  |  |  |  |  |
+| Multilingual | `multi` | X |  | X |  |  |  |
+| Norwegian | `no` | X |  | X |  |  |  |
+| Persian | `fa` | X |  |  |  |  |  |
+| Polish | `pl` | X |  | X |  |  |  |
+| Portuguese | `pt` | X |  | X |  |  | X |
+| Portuguese (Brazil) | `pt-BR` | X |  | X |  |  |  |
+| Portuguese (Portugal) | `pt-PT` | X |  | X |  |  |  |
+| Romanian | `ro` | X |  | X |  |  |  |
+| Russian | `ru` | X |  | X |  |  | X |
+| Serbian | `sr` | X |  |  |  |  |  |
+| Slovak | `sk` | X |  | X |  |  |  |
+| Slovenian | `sl` | X |  |  |  |  |  |
+| Spanish | `es` | X |  | X |  |  | X |
+| Spanish (Latin America) | `es-419` | X |  | X |  |  |  |
+| Swedish | `sv` | X |  | X |  |  |  |
+| Swedish (Sweden) | `sv-SE` | X |  | X |  |  |  |
+| Tamil | `ta` | X |  |  |  |  |  |
+| Telugu | `te` | X |  |  |  |  |  |
+| Thai | `th` | X |  | X |  |  |  |
+| Thai (Thailand) | `th-TH` | X |  | X |  |  |  |
+| Turkish | `tr` | X |  | X |  |  |  |
+| Ukrainian | `uk` | X |  | X |  |  |  |
+| Urdu | `ur` | X |  |  |  |  |  |
+| Vietnamese | `vi` | X |  | X |  |  |  |
+
+### Multilingual transcription
+
+For Nova 3 or Nova 2, set `transcriber.language` to `multi`. For Flux, select `flux-general-multi` and omit `transcriber.languages` to use automatic language detection. You can also provide a `languages` array to give Flux language hints for multilingual or code-switching conversations. See [Deepgram's Flux language prompting documentation](https://developers.deepgram.com/docs/flux/language-prompting).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Deepgram text-to-speech" icon="volume-high" href="/providers/voice/deepgram">
+    Configure Deepgram for text-to-speech.
+  </Card>
+  <Card title="Transcriber providers" icon="wave-square" href="/providers/transcriber/overview">
+    Compare every transcriber provider Vapi supports.
+  </Card>
+</CardGroup>

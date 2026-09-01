@@ -1,0 +1,34 @@
+---
+slug: whats-new
+---
+<Card
+  title="Subscribe to the latest product updates"
+  icon="envelope"
+  iconType="solid"
+>
+  <form
+    method="POST"
+    action="https://customerioforms.com/forms/submit_action?site_id=5f95a74ff6539f0bc48f&form_id=01jk7tf2khhf5satn62531qe25&success_url=https://docs.vapi.ai/whats-new"
+    className="subscribe-form"
+    style={{margin: '1rem 0'}}
+  >
+    <div className="subscribe-form-row">
+      <label htmlFor="email_input" style={{ display: 'none' }}>E-mail address</label>
+      <input
+        id="email_input"
+        className="subscribe-form-input"
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        required
+      />
+      <button
+        type="submit"
+        className="subscribe-form-button"
+      >
+        Submit
+      </button>
+    </div>
+    <div className="subscribe-form-message" style={{ display: 'none' }}></div>
+  </form>
+</Card>

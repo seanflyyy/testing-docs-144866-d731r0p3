@@ -1,0 +1,129 @@
+
+api:
+  specs:
+    - openapi: ./openapi.json
+      overrides: ./openapi-overrides.yml
+      overlays: ./openapi-parameter-descriptions-overlay.yml
+      origin: https://api.vapi.ai/api-json
+      settings:
+        title-as-schema-name: false
+        coerce-enums-to-literals: false
+        respect-nullable-schemas: true
+groups:
+  python-sdk:
+    generators:
+      - name: fernapi/fern-python-sdk
+        version: 5.3.3
+        api:
+          settings:
+            prefer-undiscriminated-unions-with-literals: true
+        output:
+          location: pypi
+          package-name: vapi_server_sdk
+          token: ${PYPI_TOKEN}
+        github:
+          repository: VapiAI/server-sdk-python
+          mode: pull-request
+        config:
+          pydantic_config:
+            skip_validation: true
+          client_class_name: Vapi
+        smart-casing: false
+  ts-sdk:
+    generators:
+      - name: fernapi/fern-typescript-sdk
+        version: 3.63.0
+        api:
+          settings:
+            prefer-undiscriminated-unions-with-literals: true
+        output:
+          location: npm
+          package-name: '@vapi-ai/server-sdk'
+          token: OIDC
+        github:
+          repository: VapiAI/server-sdk-typescript
+          mode: pull-request
+        config:
+          namespaceExport: Vapi
+          allowCustomFetcher: true
+          skipResponseValidation: true
+          includeApiReference: true
+          noSerdeLayer: true
+          omitUndefined: true
+          enableInlineTypes: false
+        smart-casing: true
+  go-sdk:
+    generators:
+      - name: fernapi/fern-go-sdk
+        version: 1.33.5
+        disable-examples: true
+        api:
+          settings:
+            prefer-undiscriminated-unions-with-literals: true
+        github:
+          repository: VapiAI/server-sdk-go
+          mode: pull-request
+        config:
+          union: v1
+        smart-casing: false
+  ruby-sdk:
+    generators:
+      - name: fernapi/fern-ruby-sdk
+        version: 1.1.13
+        disable-examples: true
+        github:
+          repository: VapiAI/server-sdk-ruby
+          mode: pull-request
+        output:
+          location: rubygems
+          package-name: vapi_server_sdk
+        config:
+          clientClassName: Vapi
+          rubocopVariableNumberStyle: disabled
+        smart-casing: false
+  csharp-sdk:
+    generators:
+      - name: fernapi/fern-csharp-sdk
+        version: 2.58.0
+        disable-examples: true
+        github:
+          repository: VapiAI/server-sdk-csharp
+          mode: pull-request
+        output:
+          location: nuget
+          package-name: Vapi.Net
+          api-key: ${NUGET_API_KEY}
+        config:
+          namespace: Vapi.Net
+          client-class-name: VapiClient
+          additional-properties: false
+          enable-forward-compatible-enums: false
+          generate-mock-server-tests: false
+          inline-path-parameters: false
+          simplify-object-dictionaries: true
+          use-discriminated-unions: false
+        smart-casing: false
+  php-sdk:
+    generators:
+      - name: fernapi/fern-php-sdk
+        version: 2.4.0
+        github:
+          repository: VapiAI/server-sdk-php
+          mode: pull-request
+        config:
+          namespace: Vapi
+          client-class-name: VapiClient
+        smart-casing: false
+  swift-sdk:
+    generators:
+      - name: fernapi/fern-swift-sdk
+        version: 0.31.0
+        disable-examples: true
+        github:
+          repository: VapiAI/server-sdk-swift
+          mode: pull-request
+        config:
+          clientClassName: VapiClient
+          moduleName: Vapi
+          environmentEnumName: VapiEnvironment
+        smart-casing: false

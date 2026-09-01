@@ -1,0 +1,51 @@
+---
+title: Deepgram
+subtitle: Use Deepgram for text-to-speech in Vapi.
+description: Configure Deepgram as your Vapi assistant's text-to-speech provider and select a Deepgram Aura voice.
+slug: providers/voice/deepgram
+---
+
+Deepgram provides text-to-speech for Vapi voice agents.
+
+You can use Deepgram through Vapi's default integration, or connect your own account in [Integrations](/providers/integrations).
+
+## Supported capability
+
+| Capability | Provider value |
+| --- | --- |
+| Text-to-speech | `deepgram` |
+
+## Text-to-speech
+
+Set `voice.provider` to `deepgram` and `voice.voiceId` to a Deepgram Aura voice. Browse and copy a voice's ID from the [Voice Library](/providers/voice/overview); the default voice is `asteria`.
+
+```bash
+curl -X PATCH "https://api.vapi.ai/assistant/ASSISTANT_ID" \
+  -H "Authorization: Bearer $VAPI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "voice": { "provider": "deepgram", "voiceId": "asteria" }
+  }'
+```
+
+For additional API configuration options, review the [`DeepgramVoice` fields](/api-reference/assistants/create#request.body.voice.DeepgramVoice) in the Create Assistant API reference.
+
+### Supported models and languages
+
+| Model | Supported languages |
+| --- | --- |
+| Aura | English |
+| Aura-2 | English, Spanish, German |
+
+Because Deepgram offers more than 12 voices, use the [Voice Library](/providers/voice/overview) to browse every voice currently available to your organization and copy its `voiceId`. You can also review [Deepgram's voice catalog](https://developers.deepgram.com/docs/tts-models).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Deepgram speech-to-text" icon="wave-square" href="/providers/transcriber/deepgram">
+    Configure Deepgram for speech-to-text.
+  </Card>
+  <Card title="Voice providers" icon="volume-high" href="/providers/voice/overview">
+    Compare every voice provider Vapi supports.
+  </Card>
+</CardGroup>

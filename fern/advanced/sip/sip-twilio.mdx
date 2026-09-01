@@ -1,0 +1,207 @@
+---
+title: Twilio SIP Integration
+subtitle: How to integrate Twilio SIP with Vapi
+slug: advanced/sip/twilio
+---
+
+<Frame>
+  <div class="video-embed-wrapper">
+    <iframe
+      src="https://www.youtube.com/embed/_wo5wokt3dI?si=72E1azM7tYv6TsBI"
+      title='An embedded YouTube video titled "The Ultimate SIP Trunking Guide for AI Voice Agents | Twilio + Vapi"'
+      frameborder="0"
+      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    />
+  </div>
+</Frame>
+
+This guide walks you through setting up both outbound and inbound SIP trunking between Twilio and Vapi. The steps are quite similar for other telephony providers.
+
+## Outbound Calls (Twilio to Vapi)
+
+### Twilio Configuration
+
+1. **Create Elastic SIP Trunk**
+   
+   Log in to your Twilio account and create a new trunk, assigning it a name, and adjusting the general settings as needed.
+   
+   ![Twilio SIP Trunk](../../static/images/sip/sip-twilio-trunk.png)
+
+2. **Set Up Termination (Outbound Calls)**
+   
+   Configure the termination settings. The termination SIP URI is crucial as it will be used in later steps.
+   
+   ![Termination SIP URI](../../static/images/sip/sip-twilio-termination-uri.png)
+   
+   To allow your Elastic SIP Trunk to accept outbound requests, you need to whitelist IP addresses:
+   
+   ![IP Authentication](../../static/images/sip/sip-twilio-ip-authentication.png)
+   
+   Whitelist Vapi's SIP server static IPs for the Vapi region where your organization is hosted:
+
+   | Region | SIP host | IP addresses |
+   | --- | --- | --- |
+   | US | `sip.vapi.ai` | `44.229.228.186`, `44.238.177.138` |
+   | EU | `sip.eu.vapi.ai` | `63.182.83.170` |
+   
+   Ensure you whitelist the entire IP range as shown below:
+   
+   ![IP Whitelist 1](../../static/images/sip/sip-twilio-ip-1.png)
+   
+   ![IP Whitelist 2](../../static/images/sip/sip-twilio-ip-2.png)
+
+3. **Purchase or Move Numbers to Elastic SIP Trunk**
+   
+   After creating the Elastic SIP trunk, purchase new numbers or move existing numbers to this trunk.
+   
+   ![Number Attachment](../../static/images/sip/sip-twilio-number-attach.png)
+
+### Vapi Configuration
+
+1. **Get your Vapi API key**
+   
+   Get a [Vapi API key](/security-and-privacy/api-keys) to authenticate the API requests in this guide.
+
+2. **Create a SIP Trunk Credential**
+   
+   Use the following API call to create a SIP trunk credential. Configure the
+   Twilio termination hostname as an outbound-only gateway. Configure Twilio's
+   published signaling networks as separate inbound-only gateways.
+
+   The example below uses a Dublin termination hostname with Twilio's Ireland
+   and Frankfurt signaling networks:
+
+   ```bash
+   curl -X POST https://api.vapi.ai/credential \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer YOUR_VAPI_API_KEY" \
+   -d '{
+     "provider": "byo-sip-trunk",
+     "name": "Twilio Trunk",
+     "gateways": [
+       {
+         "ip": "YOUR_TRUNK_NAME.pstn.dublin.twilio.com",
+         "port": 5060,
+         "inboundEnabled": false,
+         "outboundEnabled": true
+       },
+       {
+         "ip": "54.171.127.192",
+         "netmask": 30,
+         "port": 5060,
+         "inboundEnabled": true,
+         "outboundEnabled": false
+       },
+       {
+         "ip": "35.156.191.128",
+         "netmask": 30,
+         "port": 5060,
+         "inboundEnabled": true,
+         "outboundEnabled": false
+       }
+     ],
+     "outboundLeadingPlusEnabled": true
+   }'
+   ```
+
+   <Warning>
+     Replace the example hostname and networks with the values for your Twilio
+     trunk's selected edges. Add every primary and failover signaling network
+     that can originate calls. Use Twilio's current [Elastic SIP Trunking IP
+     address list](https://www.twilio.com/docs/sip-trunking/ip-addresses) as the
+     source of truth.
+   </Warning>
+
+   A termination hostname can be used for outbound routing because Vapi
+   resolves it when placing a call. It cannot identify inbound traffic: Vapi
+   must match the source of an incoming SIP request against a numeric IPv4
+   network. The `netmask` value represents the CIDR prefix, so a `/30` network
+   is configured as `"netmask": 30`.
+
+   If you are adding inbound gateways to an existing credential, send a
+   `PATCH /credential/YOUR_CREDENTIAL_ID` request with the complete `gateways`
+   array, including the existing outbound gateway and the new inbound
+   networks.
+   
+   Note the `id` (credentialId) from the response for the next step.
+
+3. **Register Your Phone Number**
+   
+   Associate your Twilio number with the SIP trunk:
+
+   ```bash
+   curl -X POST https://api.vapi.ai/phone-number \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer YOUR_VAPI_API_KEY" \
+   -d '{
+     "provider": "byo-phone-number",
+     "name": "Twilio SIP Number",
+     "number": "YOUR_SIP_PHONE_NUMBER",
+     "numberE164CheckEnabled": false,
+     "credentialId": "YOUR_CREDENTIAL_ID"
+   }'
+   ```
+   
+   Note the phone number ID from the response for making calls.
+
+4. **Make Outbound Calls**
+   
+   You can make outbound calls in two ways:
+   
+   **Using the Vapi Dashboard:**
+   
+   The phone number will appear in your dashboard. Select your assistant and enter the destination number you want to call.
+   
+   **Using the API:**
+   
+   ```bash
+   curl --location 'https://api.vapi.ai/call/phone' \
+   --header 'Authorization: Bearer YOUR_VAPI_API_KEY' \
+   --header 'Content-Type: application/json' \
+   --data '{
+     "assistantId": "YOUR_ASSISTANT_ID",
+     "customer": {
+       "number": "DESTINATION_PHONE_NUMBER",
+       "numberE164CheckEnabled": false
+     },
+     "phoneNumberId": "YOUR_PHONE_NUMBER_ID"
+   }'
+   ```
+
+## Inbound Calls (Vapi to Twilio)
+
+### Twilio Configuration
+
+1. **Set Up Origination (Inbound Calls)**
+   
+   Navigate to the Origination section in your Twilio SIP Trunk settings.
+   
+   ![Origination Settings](../../static/images/sip/sip-twilio-origination.png)
+   
+   Add your Vapi SIP URI using the SIP host for your Vapi region:
+
+   - US: `sip:YOUR_PHONE_NUMBER@<credential_id>.sip.vapi.ai`
+   - EU: `sip:YOUR_PHONE_NUMBER@<credential_id>.sip.eu.vapi.ai`
+   - TLS/SIPS: add port `5061` and `;transport=tls`, for example `sip:YOUR_PHONE_NUMBER@<credential_id>.sip.eu.vapi.ai:5061;transport=tls`
+
+   `YOUR_PHONE_NUMBER` is your chosen SIP number that you will attach to this trunk.
+   
+   ![Origination Creation](../../static/images/sip/sip-twilio-origination-creation.png)
+
+### Vapi Configuration
+
+1. **Create and Configure a Vapi Assistant**
+   
+   - Create an assistant following the steps in our [Phone Quickstart](/quickstart/phone#create-your-first-voice-assistant)
+   - In the assistant settings, link it to the phone number you created
+   
+   Now when someone calls your Twilio number, the call will be routed to your Vapi assistant.
+
+<Note>
+  If inbound calls do not reach Vapi, verify that the credential includes the
+  numeric Twilio signaling networks for every origination edge you configured.
+  Adding only the Twilio termination hostname enables outbound routing but does
+  not allowlist inbound SIP traffic.
+</Note>

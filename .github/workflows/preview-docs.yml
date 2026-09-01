@@ -1,57 +1,31 @@
-name: preview-docs
+name: Preview Docs
 
 on: pull_request
 
 jobs:
   run:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    permissions: write-all
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: "24"
-
-      - name: Setup Fern CLI
-        uses: fern-api/setup-fern-cli@v1
+      - name: Install Fern
+        run: npm install -g fern-api
 
       - name: Generate preview URL
         id: generate-docs
         env:
           FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
+          POSTHOG_PROJECT_API_KEY: ${{ secrets.POSTHOG_PROJECT_API_KEY }}
         run: |
-          OUTPUT=$(fern generate --docs --preview 2>&1) || true
+          OUTPUT=$(fern generate --docs --preview --log-level debug 2>&1) || true
           echo "$OUTPUT"
           URL=$(echo "$OUTPUT" | grep -oP 'Published docs to \K.*(?= \()')
           echo "Preview URL: $URL"
           echo "🌿 Preview your docs: $URL" > preview_url.txt
 
       - name: Comment URL in PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          MARKER="<!-- fern-preview-docs -->"
-          {
-            cat preview_url.txt
-            printf '\n%s\n' "$MARKER"
-          } > comment-with-marker.md
-
-          # Upsert by looking up an existing comment that carries our hidden marker.
-          EXISTING_ID=$(gh api --paginate \
-            "repos/$REPO/issues/$PR_NUMBER/comments" \
-            --jq "[.[] | select(.body | contains(\"$MARKER\"))][0].id // empty")
-
-          jq -Rn --rawfile body comment-with-marker.md '{body: $body}' > payload.json
-
-          if [ -n "$EXISTING_ID" ]; then
-            gh api -X PATCH "repos/$REPO/issues/comments/$EXISTING_ID" --input payload.json
-          else
-            gh api -X POST "repos/$REPO/issues/$PR_NUMBER/comments" --input payload.json
-          fi
+        uses: thollander/actions-comment-pull-request@v2.4.3
+        with:
+          filePath: preview_url.txt

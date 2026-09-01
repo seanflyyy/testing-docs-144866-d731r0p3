@@ -1,0 +1,66 @@
+---
+title: OpenAI
+subtitle: Use OpenAI GPT models with your Vapi voice agent.
+description: Configure OpenAI as your Vapi assistant's language model and choose from the GPT models Vapi supports.
+slug: providers/model/openai
+---
+
+OpenAI provides language models for Vapi voice agents.
+
+You can use OpenAI through Vapi's default integration, or connect your own account in [Integrations](/providers/integrations).
+
+## Supported capability
+
+| Capability | Provider value |
+| --- | --- |
+| Language model | `openai` |
+
+## Language model
+
+Set `model.provider` to `openai` and `model.model` to a GPT model.
+
+```bash
+curl -X PATCH "https://api.vapi.ai/assistant/ASSISTANT_ID" \
+  -H "Authorization: Bearer $VAPI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": { "provider": "openai", "model": "gpt-4.1" }
+  }'
+```
+
+For additional API configuration options, review the [`OpenAIModel` fields](/api-reference/assistants/create#request.body.model.OpenAIModel) in the Create Assistant API reference.
+
+| Model | Model ID |
+| --- | --- |
+| GPT 5.6 Sol | `gpt-5.6-sol` |
+| GPT 5.6 Terra | `gpt-5.6-terra` |
+| GPT 5.6 Luna | `gpt-5.6-luna` |
+| GPT 5.5 | `gpt-5.5` |
+| GPT Instant (latest) | `chat-latest` |
+| GPT 5.4 | `gpt-5.4` |
+| GPT 5.4 Mini | `gpt-5.4-mini` |
+| GPT 5.4 Nano | `gpt-5.4-nano` |
+| GPT 5.2 | `gpt-5.2` |
+| GPT 5.1 | `gpt-5.1` |
+| GPT 5 | `gpt-5` |
+| GPT 5 Mini | `gpt-5-mini` |
+| GPT 5 Nano | `gpt-5-nano` |
+| GPT 4.1 | `gpt-4.1` |
+| GPT 4.1 Mini | `gpt-4.1-mini` |
+| GPT 4o Mini | `gpt-4o-mini` |
+| GPT Realtime 2 | `gpt-realtime-2` |
+| o3 | `o3` |
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="OpenAI text-to-speech" icon="volume-high" href="/providers/voice/openai">
+    Configure OpenAI for text-to-speech.
+  </Card>
+  <Card title="OpenAI speech-to-text" icon="wave-square" href="/providers/transcriber/openai">
+    Configure OpenAI for speech-to-text.
+  </Card>
+  <Card title="Model providers" icon="brain" href="/providers/model/overview">
+    Compare every language model provider Vapi supports.
+  </Card>
+</CardGroup>
