@@ -20,9 +20,6 @@ colors:
   header-background:
     light: "#FFFFFF"
     dark: "#0E0E13"
-experimental:
-  mdx-components:
-    - snippets
 settings:
   http-snippets: false
   dark-mode-code: true
@@ -30,129 +27,93 @@ css: assets/styles.css
 js:
   - path: ./assets/close-playground.js
   - path: ./custom.js
-tabs:
-  api-reference:
-    slug: api-reference
-    icon: terminal
-    display-name: API Reference
-  documentation:
-    display-name: Documentation
-    icon: book
-    slug: documentation
 layout:
-  tabs-placement: header
   searchbar-placement: header
   header-height: 80px
   page-width: full
   content-width: 55rem
   sidebar-width: 300px
 navigation:
-  - tab: documentation
-    layout:
-      - section: Tools
-        path: tools/introduction.mdx
-        collapsed: true
-        icon: fa-light fa-toolbox
+  - section: Tools
+    path: tools/introduction.mdx
+    icon: fa-light fa-toolbox
+    contents:
+      - page: Built-in call tools
+        path: tools/default-tools.mdx
+        icon: fa-light fa-gear
+      - section: API Request Tool
+        path: tools/api-request.mdx
+        icon: fa-light fa-globe
         contents:
-          - page: Built-in call tools
-            path: tools/default-tools.mdx
-            icon: fa-light fa-gear
-          - section: API Request Tool
-            path: tools/api-request.mdx
-            icon: fa-light fa-globe
-            contents:
-              - page: Coffee-order quickstart
-                path: tools/api-request/quickstart.mdx
-              - page: Configure requests
-                path: tools/api-request/configuration.mdx
-              - page: Handle latency and retries
-                path: tools/api-request/reliability.mdx
-              - page: Handle responses and errors
-                path: tools/api-request/response-handling.mdx
-              - page: Use response data
-                path: tools/api-request/response-data.mdx
-          - section: Transfer call tool
-            path: tools/transfer-call.mdx
-            icon: fa-solid fa-phone
-            contents:
-              - page: Blind transfer
-                path: tools/transfer-call/blind-transfer.mdx
-              - page: Warm transfer
-                path: tools/transfer-call/warm-transfer.mdx
-              - page: Assistant-based warm transfer
-                path: calls/assistant-based-warm-transfer.mdx
-          - page: Voicemail tool
-            path: tools/voicemail-tool.mdx
-            icon: fa-light fa-voicemail
-          - page: Custom tools
-            path: tools/custom-tools.mdx
-            icon: fa-light fa-screwdriver-wrench
-          - page: Code tool
-            path: tools/code-tool.mdx
-            icon: fa-light fa-code
-          - page: Client-side tools (Web SDK)
-            path: tools/client-side-websdk.mdx
-            icon: fa-light fa-browser
-          - page: Tool rejection plan
-            path: tools/tool-rejection-plan.mdx
-            icon: fa-light fa-shield-xmark
-          - page: Static variables and aliases
-            path: tools/static-variables-and-aliases.mdx
-            icon: fa-light fa-arrow-right-arrow-left
-          - page: Custom tools troubleshooting
-            path: tools/custom-tools-troubleshooting.mdx
-            icon: fa-light fa-wrench
-          - link: Handoff tool
-            href: /squads/handoff
-            icon: fa-light fa-hand-holding-hand
-          - section: External tools
-            icon: fa-light fa-cubes
-            contents:
-              - page: Google Calendar
-                path: tools/google-calendar.mdx
-                icon: fa-light fa-calendar-days
-              - page: Google Sheets
-                path: tools/google-sheets.mdx
-                icon: fa-brands fa-google-drive
-              - page: Slack
-                path: tools/slack.mdx
-                icon: fa-brands fa-slack
-              - page: GoHighLevel
-                path: tools/go-high-level.mdx
-                icon: fa-light fa-arrow-up
-          - section: Knowledge retrieval
-            path: knowledge-base/knowledge-base.mdx
-            icon: fa-light fa-book
-            contents:
-              - page: Query tool
-                path: knowledge-base/using-query-tool.mdx
-                icon: fa-light fa-magnifying-glass
-              - page: Custom knowledge base
-                path: knowledge-base/custom-knowledge-base.mdx
-                icon: fa-light fa-server
-          - page: Argument encryption
-            path: tools/arguments-encryption.mdx
-            icon: fa-light fa-lock
-
-  - tab: api-reference
-    layout:
-      - api: API reference
-        api-name: api
-        flattened: true
-        skip-slug: true
-        paginated: true
-        snippets:
-          typescript: "@vapi/server-sdk"
-          python: vapi_server_sdk
-          go: https://github.com/VapiAI/server-sdk-go
-
-      - api: Webhooks
-        api-name: webhooks
-        paginated: true
-
-      - section: ""
+          - page: Coffee-order quickstart
+            path: tools/api-request/quickstart.mdx
+          - page: Configure requests
+            path: tools/api-request/configuration.mdx
+          - page: Handle latency and retries
+            path: tools/api-request/reliability.mdx
+          - page: Handle responses and errors
+            path: tools/api-request/response-handling.mdx
+          - page: Use response data
+            path: tools/api-request/response-data.mdx
+      - section: Transfer call tool
+        path: tools/transfer-call.mdx
+        icon: fa-solid fa-phone
         contents:
-          - link: Swagger
-            href: https://api.vapi.ai/api
-          - link: OpenAPI
-            href: https://api.vapi.ai/api-json
+          - page: Blind transfer
+            path: tools/transfer-call/blind-transfer.mdx
+          - page: Warm transfer
+            path: tools/transfer-call/warm-transfer.mdx
+          - page: Assistant-based warm transfer
+            path: calls/assistant-based-warm-transfer.mdx
+      - page: Voicemail tool
+        path: tools/voicemail-tool.mdx
+        icon: fa-light fa-voicemail
+      - page: Custom tools
+        path: tools/custom-tools.mdx
+        icon: fa-light fa-screwdriver-wrench
+      - page: Code tool
+        path: tools/code-tool.mdx
+        icon: fa-light fa-code
+      - page: Client-side tools (Web SDK)
+        path: tools/client-side-websdk.mdx
+        icon: fa-light fa-browser
+      - page: Tool rejection plan
+        path: tools/tool-rejection-plan.mdx
+        icon: fa-light fa-shield-xmark
+      - page: Static variables and aliases
+        path: tools/static-variables-and-aliases.mdx
+        icon: fa-light fa-arrow-right-arrow-left
+      - page: Custom tools troubleshooting
+        path: tools/custom-tools-troubleshooting.mdx
+        icon: fa-light fa-wrench
+      - section: External tools
+        icon: fa-light fa-cubes
+        contents:
+          - page: Google Calendar
+            path: tools/google-calendar.mdx
+            icon: fa-light fa-calendar-days
+          - page: Google Sheets
+            path: tools/google-sheets.mdx
+            icon: fa-brands fa-google-drive
+          - page: Slack
+            path: tools/slack.mdx
+            icon: fa-brands fa-slack
+          - page: GoHighLevel
+            path: tools/go-high-level.mdx
+            icon: fa-light fa-arrow-up
+      - section: Knowledge retrieval
+        path: knowledge-base/knowledge-base.mdx
+        icon: fa-light fa-book
+        contents:
+          - page: Query tool
+            path: knowledge-base/using-query-tool.mdx
+            icon: fa-light fa-magnifying-glass
+          - page: Custom knowledge base
+            path: knowledge-base/custom-knowledge-base.mdx
+            icon: fa-light fa-server
+      - page: Argument encryption
+        path: tools/arguments-encryption.mdx
+        icon: fa-light fa-lock
+      - page: MCP
+        path: tools/mcp.mdx
+        icon: fa-light fa-code-branch
