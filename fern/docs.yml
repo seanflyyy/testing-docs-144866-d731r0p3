@@ -38,6 +38,9 @@ navigation:
     path: tools/introduction.mdx
     icon: fa-light fa-toolbox
     contents:
+      - page: Hello World
+        path: tools/hello-world.mdx
+        icon: fa-light fa-hand-wave
       - page: Built-in call tools
         path: tools/default-tools.mdx
         icon: fa-light fa-gear
