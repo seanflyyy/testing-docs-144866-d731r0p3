@@ -41,6 +41,9 @@ navigation:
       - page: Hello World
         path: tools/hello-world.mdx
         icon: fa-light fa-hand-wave
+      - page: Hello World 3
+        path: tools/hello-world-3.mdx
+        icon: fa-light fa-hand-wave
       - page: Built-in call tools
         path: tools/default-tools.mdx
         icon: fa-light fa-gear
